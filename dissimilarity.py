@@ -109,6 +109,7 @@ for i in data_test:
     results.append(result_2[2])
     # print(result_2[0])
     
+    # Если три потенциальных автора.
     #result_3 = authorship_verification(i, max_dissimilarities_3, data_3)
     #results.append(result_3[2])
     # print(result_3[0])
