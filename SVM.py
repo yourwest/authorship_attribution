@@ -2,8 +2,6 @@ __author__ = 'angelinaprisyazhnaya'
 
 import csv
 import numpy as np
-from sklearn import metrics
-from sklearn.preprocessing import label_binarize
 from sklearn import svm
 import matplotlib.pyplot as plt
 from matplotlib import style
@@ -45,16 +43,20 @@ for row in csv_iter:
                 continue
         data_test.append(new_row[1:])
 
-
+# Массивы с обучающими данными.
 values = np.array(X)
 labels = np.array(y)
+
+# Массивы с тестовыми данными.
 data_test = np.array(data_test)
 labels_test = np.array(labels_test)
 
+# Строим модель SVM.
 clf = svm.LinearSVC()
 clf.fit(values, labels)
 
-
+# Результат на обучающих текстах.
 print(clf.score(values, labels))
-print(clf.score(data_test, labels_test))
 
+# Результат на тестовых текстах.
+print(clf.score(data_test, labels_test))
