@@ -7,10 +7,10 @@ import tweepy  # https://github.com/tweepy/tweepy
 import csv
 
 # Twitter API credentials
-consumer_key = "7ayO8FSQxuKS9crzwSqAOcjlX"
-consumer_secret = "TKV9GCL4oCtrLLvqJUBiFoSnAJ73O2kH1pAKrPMxo0QDf5jfDM"
-access_key = "120130490-4ta4Q95fFSruztpAeMgyg8XlHMtvyN0oLvHKzJcB"
-access_secret = "82faFF3ZET65GClDztn7aYjPsiZrAZYkVPzwNAEauPZtJ"
+consumer_key = ""
+consumer_secret = ""
+access_key = ""
+access_secret = ""
 
 
 def get_all_tweets(screen_name):
@@ -73,4 +73,4 @@ def get_all_tweets(screen_name):
 
 if __name__ == '__main__':
     # pass in the username of the account you want to download
-    get_all_tweets("Monatique")
+    get_all_tweets("username")
