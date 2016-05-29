@@ -6,27 +6,12 @@ import os
 import urllib
 import urllib.request as urlr
 
-
-#urls = ['http://www.colta.ru/authors/471',
-        #'http://www.colta.ru/authors/66',
-        #'http://www.colta.ru/authors/26']
-
-urls = ['https://slon.ru/authors/39477']
-#urls = ['https://slon.ru/authors/84006', 'https://slon.ru/authors/100053', 'https://slon.ru/authors/100021',
-        #'https://slon.ru/authors/74730', 'https://slon.ru/authors/6617', 'https://slon.ru/authors/37648',
-        #'https://slon.ru/authors/39194', 'https://slon.ru/authors/817', 'https://slon.ru/authors/35885']
-        #'https://slon.ru/authors/29662', 'https://slon.ru/authors/30679', 'https://slon.ru/authors/84006',
-        #'https://slon.ru/authors/79312', 'https://slon.ru/authors/37648', 'https://slon.ru/authors/817',
-        #'https://slon.ru/authors/100018', 'https://slon.ru/authors/100131', 'https://slon.ru/authors/100118',
-        #'https://slon.ru/authors/768', 'https://slon.ru/authors/73078', 'https://slon.ru/authors/40218',
-        #'https://slon.ru/authors/5005', 'https://slon.ru/authors/39477', 'https://slon.ru/authors/35885',
-        #'https://slon.ru/authors/34312', 'https://slon.ru/authors/60195', 'https://slon.ru/authors/100021',
-        #'https://slon.ru/authors/100124'
-
+urls = ['https://slon.ru/authors/100021', 'https://slon.ru/authors/100053', 'https://slon.ru/authors/39477',
+        'https://slon.ru/authors/37648', 'https://slon.ru/authors/39194', 'https://slon.ru/authors/817']
 
 MAIN_URL = 'https://slon.ru'
 
-
+# Собирает адреса статей со страницы автора.
 def collect_urls(url):
     article_urls = []
     url_part = re.search('/authors/\d+', url)
@@ -41,7 +26,7 @@ def collect_urls(url):
             article_urls.append(item)
     return article_urls
 
-
+# Находит название и содержание статьи.
 def parse_html(page):
     article_name = re.findall('data-title="(.*?)"', page, flags=re.DOTALL)
     if not article_name != []:
@@ -60,7 +45,9 @@ def parse_html(page):
         #content = re.sub('^\s+|\n|\r|\s+$', '', content)
         return [name, content, article_authors]
 
-
+# Для каждого url (для каждого автора) ищутся ссылки на его статьи, затем на странице
+# статьи ищется название и текст. Текст сохраняется в текстовый файл (название файла - название 
+# статьи), все текстовые файлы одного автора сохраняются в одну папку (название папки - ID автора).
 for url in urls:
     author_number = re.search('/([0-9]+)\\b', url)
     author = author_number.group(1)
