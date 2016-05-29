@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 style.use('ggplot')
 
+# Два или три потенциальных автора.
 all_files = ['./tweets/dasha_v_kabake_tweets.csv',
              './tweets/feeling_so_real_tweets.csv',
              './tweets/electroeb_tweets.csv']
@@ -22,7 +23,7 @@ def text_to_words(text):
 def word(sentence):
     return sentence.lower().split()
 
-
+# Собирает в массив все твиты одного автора (из csv-файла).
 def collect_tweets(file):
     tweets = []
     f = open(file, 'r', encoding='utf8')
@@ -33,7 +34,8 @@ def collect_tweets(file):
             tweets.append(row[2])
     return tweets
 
-
+# Здесь и дальше в названиях функциях и переменных написано "trigrams", но имеются в виду
+# и биграммы тоже (если в строках 50, 51 и 59 поменять 3 на 2).
 def collect_ngrams(*args):
     all_texts = ''
     trigrams = set()
@@ -68,7 +70,7 @@ def collect_ngrams(*args):
 
     return trigrams_dict, all_texts
 
-
+# Находит частотные n-граммы.
 def find_frequent_trigrams(trigrams_dict, texts):
     freqs = []
     final_trigrams = []
@@ -79,11 +81,12 @@ def find_frequent_trigrams(trigrams_dict, texts):
         amount = len(find)
         freq = amount / len(texts.split())
         freqs.append(freq)
-        if freq > 0.001:
+        if freq > 0.001: # Пороговое значение.
             final_trigrams.append(trigram)
             final_trigrams_dict[trigram] = trigrams_dict[trigram]
             for i in final_trigrams_dict[trigram]:
                 final_words.add(i)
+    # График распределения частот.
     plt.plot(sorted(freqs))
     plt.xlabel('Число n-грамм')
     plt.ylabel('Частота n-грамм')
@@ -92,23 +95,7 @@ def find_frequent_trigrams(trigrams_dict, texts):
         #print(i + str(trigrams_dict[i]))
     return final_trigrams_dict, final_words
 
-
-def find_frequent_words(texts):
-    freqs = dict()
-    all_words = texts.split()
-    frequent_words = set()
-    for w in set(all_words):
-        find = re.findall(w, texts, flags=re.DOTALL)
-        amount = len(find)
-        freq = amount / len(all_words)
-        freqs[w] = freq
-        if freq > 0.002:
-            frequent_words.add(w)
-    #plt.plot(sorted(freqs.values()))
-    #plt.show()
-    return frequent_words
-
-
+# Возвращает список с частотами n-грамм (для одного твита).
 def count_trigrams(tweet, trigrams):
     d = {}
     for trigram in trigrams:
@@ -125,7 +112,7 @@ def count_trigrams(tweet, trigrams):
 
     return d
 
-
+# Собирает все признаки всех твитов одного автора в таблицу.
 def collect_data(tweets, author, ngrams, conjs, parenthesis):
     data_train = []
     data_test = []
@@ -202,7 +189,8 @@ prnthss = open('parenthesis.txt', 'r', encoding='utf8')
 parenthesis = []
 for line in prnthss:
     parenthesis.append(line.replace('\n', ''))
-
+    
+# Два или три потенциальных автора.
 tweets_1 = collect_tweets(all_files[0])
 tweets_2 = collect_tweets(all_files[1])
 tweets_3 = collect_tweets(all_files[2])
@@ -214,12 +202,12 @@ frequent_trigrams_list = list(frequent_trigrams.keys())
 print(len(all_trigrams_list))
 print(len(frequent_trigrams_list))
 
-
+# Два или три потенциальных автора.
 train_1, test_1 = collect_data(tweets_1, 1, frequent_trigrams_list, conjs, parenthesis)
 train_2, test_2 = collect_data(tweets_2, 2, frequent_trigrams_list, conjs, parenthesis)
 train_3, test_3 = collect_data(tweets_3, 3, frequent_trigrams_list, conjs, parenthesis)
 
-
+# Записывается обучающий csv-файл.
 def write_data():
     data = open('data_tweets.csv', 'w', encoding='utf-8')
     all_data = np.vstack((train_1, train_2, train_3))
@@ -229,7 +217,7 @@ def write_data():
         data.write('\r\n')
     data.close()
 
-
+# Записывается тестовый csv-файл.
 def write_test_data():
     data_test = open('data_test_tweets.csv', 'w', encoding='utf-8')
     all_data_test = np.vstack((test_1, test_2, test_3))
@@ -241,5 +229,3 @@ def write_test_data():
 
 write_data()
 write_test_data()
-
-
