@@ -2,7 +2,6 @@ __author__ = 'angelinaprisyazhnaya'
 
 import csv
 import numpy as np
-from sklearn.preprocessing import label_binarize
 import matplotlib.pyplot as plt
 from matplotlib import style
 
@@ -13,6 +12,7 @@ f = open('data_tweets.csv', 'r', encoding='utf-8')
 f = f.read()
 data_1 = []
 data_2 = []
+# Если три потенциальных автора.
 #data_3 = []
 csv_iter = csv.reader(f.split('\n'), delimiter=';')
 for row in csv_iter:
@@ -21,6 +21,7 @@ for row in csv_iter:
             data_1.append(row[:-1])
         elif row[0] == '2':
             data_2.append(row[:-1])
+        # Если три потенциальных автора.
         #elif row[0] == '3':
             #data_3.append(row[:-1])
 
@@ -60,7 +61,7 @@ def find_max_dissimilarity(d_i, data):
     max_dissimilarity = max(dissimilarities)
     return max_dissimilarity
 
-
+# Считаем M и преобразовываем в вероятность (необязательно).
 def authorship_verification(test_text, m_dissimilarities, known_texts):
     threshold = 0.95
     c = 0.1
@@ -86,60 +87,30 @@ def authorship_verification(test_text, m_dissimilarities, known_texts):
 
 max_dissimilarities_1 = []
 max_dissimilarities_2 = []
+# Если три потенциальных автора.
 #max_dissimilarities_3 = []
 for t in data_1:
     max_dissimilarities_1.append(find_max_dissimilarity(t, data_1))
 for t in data_2:
     max_dissimilarities_2.append(find_max_dissimilarity(t, data_2))
+# Если три потенциальных автора.
 #for t in data_3:
     #max_dissimilarities_3.append(find_max_dissimilarity(t, data_3))
 
-
-y_test = []
-y_scores = []
 results = []
 for i in data_test:
-    y_score = []
-    y_test.append(float(i[0]))
     result_1 = authorship_verification(i, max_dissimilarities_1, data_1)
-    y_score.append(result_1[1])
     results.append(result_1[2])
-    # print(result_471[0])
+    # print(result_1[0])
+    
     result_2 = authorship_verification(i, max_dissimilarities_2, data_2)
-    y_score.append(result_2[1])
     results.append(result_2[2])
-    # print(result_66[0])
+    # print(result_2[0])
+    
+    # Если три потенциальных автора.
     #result_3 = authorship_verification(i, max_dissimilarities_3, data_3)
-    #y_score.append(result_3[1])
     #results.append(result_3[2])
-    # print(result_26[0])
-    y_scores.append(y_score)
-
-y_test = label_binarize(y_test, classes=[39194, 37648, 817])
-n_classes = y_test.shape[1]
-y = np.array(y_test)
-scores = np.array(y_scores)
-
-# fpr = dict()
-# tpr = dict()
-# roc_auc = dict()
-# for i in range(n_classes):
-#    fpr[i], tpr[i], _ = metrics.roc_curve(y_test[:, i], scores[:, i])
-#    roc_auc[i] = metrics.auc(fpr[i], tpr[i])
-
-
-# plt.figure()
-# for i in range(n_classes):
-#    plt.plot(fpr[i], tpr[i], label='ROC curve of class {0} (area = {1:0.3f})'
-#                                   ''.format(i, roc_auc[i]))
-# plt.plot([0, 1], [0, 1], 'k--')
-# plt.xlim([0.0, 1.0])
-# plt.ylim([0.0, 1.05])
-# plt.xlabel('False Positive Rate')
-# plt.ylabel('True Positive Rate')
-# plt.legend(loc="lower right")
-# plt.show()
-
+    # print(result_3[0])
 
 i = 0
 TP = 0
@@ -147,28 +118,35 @@ TN = 0
 FP = 0
 FN = 0
 print(len(results))
-while i < len(results) - 1:
+while i < len(results) - 1: #Если три автора, то - 2.
     a = results[i]
     b = results[i + 1]
+    # Если три потенциальных автора.
     #c = results[i + 2]
     m = min(a, b)#, c)
     print(m)
-    if i < 399:
+    if i < 399: # Если три автора, то 598.
         if m == a:
             TP += 1
-            TN += 2
+            TN += 1
+            # 3 автора.
+            # TN += 2
         else:
             FP += 1
             FN += 1
-            TN += 1
+            # 3 автора.
+            # TN += 1
     if 399 <= i:# < 1198:
         if m == b:
             TP += 1
-            TN += 2
+            TN += 1
+            # 3 автора.
+            # TN += 2
         else:
             FP += 1
             FN += 1
-            TN += 1
+            # 3 автора.
+            # TN += 1
     #if 1198 <= i:
         #if m == c:
             #TP += 1
@@ -187,4 +165,3 @@ accuracy = (TP + TN) / (TP + FP + FN + TN)
 print(accuracy)
 print(precision)
 print(recall)
-
