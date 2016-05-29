@@ -2,7 +2,6 @@ __author__ = 'angelinaprisyazhnaya'
 
 import csv
 import numpy as np
-from sklearn.preprocessing import label_binarize
 import matplotlib.pyplot as plt
 from matplotlib import style
 
