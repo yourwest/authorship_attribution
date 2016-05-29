@@ -218,7 +218,7 @@ train_2, test_2 = collect_data(files_2, 817, frequent_trigrams_list, conjs, pare
 #train_3, test_3 = collect_data(files_3, 39477, frequent_trigrams_list, conjs, parenthesis)
 
 
-# Записывается обучающий csv файл.
+# Записывается обучающий csv-файл.
 def write_data():
     data = open('data.csv', 'w', encoding='utf-8')
     all_data = np.vstack((train_1, train_2))#, train_3))
@@ -228,7 +228,7 @@ def write_data():
         data.write('\r\n')
     data.close()
 
-# Записывается тестовый csv файл.
+# Записывается тестовый csv-файл.
 def write_test_data():
     data_test = open('data_test.csv', 'w', encoding='utf-8')
     all_data_test = np.vstack((test_1, test_2))#, test_3))
