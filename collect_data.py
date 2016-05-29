@@ -21,7 +21,7 @@ def text_to_words(text):
 def word(sentence):
     return sentence.lower().split()
 
-
+# Собирает в массив все директории текстов одного автора.
 def collect_paths():
     paths = []
     for root, dirs, files in os.walk('.'):
