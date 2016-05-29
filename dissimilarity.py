@@ -13,15 +13,18 @@ f = open('data.csv', 'r', encoding='utf-8')
 f = f.read()
 data_1 = []
 data_2 = []
+# Если три потенциальных автора.
 #data_3 = []
 csv_iter = csv.reader(f.split('\n'), delimiter=';')
 for row in csv_iter:
     if not row == []:
+        # ID меняются.
         if row[0] == '37648':
             data_1.append(row[:-1])
-        elif row[0] == '39194':
+        elif row[0] == '817':
             data_2.append(row[:-1])
-        #elif row[0] == '817':
+        # Если три потенциальных автора.    
+        #elif row[0] == '39194':
             #data_3.append(row[:-1])
 
 
@@ -60,7 +63,7 @@ def find_max_dissimilarity(d_i, data):
     max_dissimilarity = max(dissimilarities)
     return max_dissimilarity
 
-
+# Считаем M и преобразовываем в вероятность (необязательно).
 def authorship_verification(test_text, m_dissimilarities, known_texts):
     threshold = 0.95
     c = 0.1
@@ -86,59 +89,30 @@ def authorship_verification(test_text, m_dissimilarities, known_texts):
 
 max_dissimilarities_1 = []
 max_dissimilarities_2 = []
+# Если три потенциальных автора.
 #max_dissimilarities_3 = []
 for t in data_1:
     max_dissimilarities_1.append(find_max_dissimilarity(t, data_1))
 for t in data_2:
     max_dissimilarities_2.append(find_max_dissimilarity(t, data_2))
+# Если три потенциальных автора.
 #for t in data_3:
     #max_dissimilarities_3.append(find_max_dissimilarity(t, data_3))
 
-y_test = []
-y_scores = []
+
 results = []
 for i in data_test:
-    y_score = []
-    y_test.append(float(i[0]))
     result_1 = authorship_verification(i, max_dissimilarities_1, data_1)
-    y_score.append(result_1[1])
     results.append(result_1[2])
     # print(result_1[0])
+    
     result_2 = authorship_verification(i, max_dissimilarities_2, data_2)
-    y_score.append(result_2[1])
     results.append(result_2[2])
     # print(result_2[0])
+    
     #result_3 = authorship_verification(i, max_dissimilarities_3, data_3)
-    #y_score.append(result_3[1])
     #results.append(result_3[2])
     # print(result_3[0])
-    y_scores.append(y_score)
-
-y_test = label_binarize(y_test, classes=[39194, 37648, 817])
-n_classes = y_test.shape[1]
-y = np.array(y_test)
-scores = np.array(y_scores)
-
-# fpr = dict()
-# tpr = dict()
-# roc_auc = dict()
-# for i in range(n_classes):
-#    fpr[i], tpr[i], _ = metrics.roc_curve(y_test[:, i], scores[:, i])
-#    roc_auc[i] = metrics.auc(fpr[i], tpr[i])
-
-
-# plt.figure()
-# for i in range(n_classes):
-#    plt.plot(fpr[i], tpr[i], label='ROC curve of class {0} (area = {1:0.3f})'
-#                                   ''.format(i, roc_auc[i]))
-# plt.plot([0, 1], [0, 1], 'k--')
-# plt.xlim([0.0, 1.0])
-# plt.ylim([0.0, 1.05])
-# plt.xlabel('False Positive Rate')
-# plt.ylabel('True Positive Rate')
-# plt.legend(loc="lower right")
-# plt.show()
-
 
 i = 0
 TP = 0
@@ -146,21 +120,25 @@ TN = 0
 FP = 0
 FN = 0
 print(len(results))
-while i < len(results) - 1:
+while i < len(results) - 1: #Если три автора, то - 2.
     a = results[i]
     b = results[i + 1]
+    # Если три потенциальных автора.
     #c = results[i + 2]
     m = min(a, b)#, c)
     print(m)
-    if i < 19:
+    if i < 19: # Если три автора, то 28.
         if m == a:
             TP += 1
-            TN += 2
+            TN += 1
+            # 3 автора.
+            # TN += 2
         else:
             FP += 1
             FN += 1
-            TN += 1
-    if 19 <= i:# < 46:
+            # 3 автора.
+            # TN += 1
+    if 19 <= i:# < 58:
         if m == b:
             TP += 1
             TN += 2
@@ -168,7 +146,7 @@ while i < len(results) - 1:
             FP += 1
             FN += 1
             TN += 1
-    #if 46 <= i:
+    #if 58 <= i:
         #if m == c:
             #TP += 1
             #TN += 2
